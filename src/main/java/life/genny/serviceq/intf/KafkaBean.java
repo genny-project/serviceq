@@ -24,7 +24,13 @@ public class KafkaBean implements KafkaInterface {
 	 */
 	public void write(String channel, String payload) { 
 
-		if ("webcmds".equals(channel)) {
+		if ("data".equals(channel)) {
+			producer.getToData().send(payload);
+
+		} else if ("valid_data".equals(channel)) {
+			producer.getToValidData().send(payload);
+
+		} else if ("webcmds".equals(channel)) {
 			producer.getToWebCmds().send(payload);
 
 		} else if ("webdata".equals(channel)) {

@@ -13,14 +13,14 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 @ApplicationScoped
 public class InternalProducer {
 
-  @Inject @Channel("search_eventsout") Emitter<String> searchEvents;
-  public Emitter<String> getToSearchEvents() {
-    return searchEvents;
+  @Inject @Channel("data") Emitter<String> data;
+  public Emitter<String> getToData() {
+    return data;
   }
 
-  @Inject @Channel("search_dataout") Emitter<String> searchData;
-  public Emitter<String> getToSearchData() {
-    return searchData;
+  @Inject @Channel("valid_data") Emitter<String> valid_data;
+  public Emitter<String> getToValidData() {
+    return valid_data;
   }
 
   @Inject @Channel("webcmdsout") Emitter<String> webCmds;
@@ -33,12 +33,22 @@ public class InternalProducer {
     return webData;
   }
 
-  @Inject @Channel("messages") Emitter<String> messages;
+  @Inject @Channel("search_eventsout") Emitter<String> searchEvents;
+  public Emitter<String> getToSearchEvents() {
+    return searchEvents;
+  }
+
+  @Inject @Channel("search_dataout") Emitter<String> searchData;
+  public Emitter<String> getToSearchData() {
+    return searchData;
+  }
+
+  @Inject @Channel("messagesout") Emitter<String> messages;
   public Emitter<String> getToMessages() {
     return messages;
   }
 
-  @Inject @Channel("schedule") Emitter<String> schedule;
+  @Inject @Channel("scheduleout") Emitter<String> schedule;
   public Emitter<String> getToSchedule() {
     return schedule;
   }
