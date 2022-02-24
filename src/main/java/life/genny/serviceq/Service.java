@@ -63,44 +63,85 @@ public class Service {
 
 	BaseEntityUtils beUtils;
 
+	/**
+	* Get the BaseEntityUtils instance.
+	*
+	* @return The BaseEntityUtils object
+	 */
 	public BaseEntityUtils getBeUtils() {
 		return beUtils;
 	}
 
+	/**
+	* Set the BaseEntityUtils instance.
+	*
+	* @param beUtils The BaseEntityUtils object
+	 */
 	public void setBeUtils(BaseEntityUtils beUtils) {
 		this.beUtils = beUtils;
 	}
 
+	/**
+	* Get the serviceToken.
+	*
+	* @return The serviceToken
+	 */
 	public GennyToken getServiceToken() {
 		return serviceToken;
 	}
 
+	/**
+	* Set the serviceToken.
+	*
+	* @param serviceToken The serviceToken
+	 */
 	public void setServiceToken(GennyToken serviceToken) {
 		this.serviceToken = serviceToken;
 	}
 
+	/**
+	* Initialize the serviceToken and BE Utility.
+	 */
 	public void initToken() {
 		// fetch token and init entity utility
 		serviceToken = KeycloakUtils.getToken(baseKeycloakUrl, keycloakRealm, clientId, secret, serviceUsername, servicePassword);
 		beUtils = new BaseEntityUtils(serviceToken);
 	}
 
+	/**
+	* Initialize the database connection
+	 */
 	public void initDatabase() {
 		DatabaseUtils.init(entityManager);
 	}
 
+	/**
+	* Initialize the cache connection
+	 */
 	public void initCache() {
 		CacheUtils.init(cache);
 	}
 
+	/**
+	* Initialize the Kafka channels.
+	*
+	* NOTE: This is probably redundant. 
+	* We could move the KafkaBean code into KafkaUtils.
+	 */
 	public void initKafka() {
 		KafkaUtils.init(kafkaBean);
 	}
 
+	/**
+	* Initialize the Attribute cache.
+	 */
 	public void initAttributes() {
 		QwandaUtils.init(serviceToken);
 	}
 	
+	/**
+	* Perform a full initialization of the service.
+	 */
 	public void fullServiceInit() {
 		initToken();
 		initDatabase();

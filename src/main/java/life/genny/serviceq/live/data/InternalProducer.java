@@ -6,8 +6,8 @@ import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 /**
- * InternalProducer --- Kafka smalltye producer objects to send to internal consumers backends
- * such as wildfly-rulesservice. 
+ * InternalProducer --- Kafka smallrye producer objects to send to other
+ * internal consumers within GENNY.
  */
 
 @ApplicationScoped
