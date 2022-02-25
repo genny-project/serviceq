@@ -1,4 +1,4 @@
 # serviceq
 
-A Natively Compiled Genny Service initiazation package, used to build other Genny services.
+A Natively Compiled Genny Service initialization package, used to build other Genny services.
 
