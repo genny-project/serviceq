@@ -15,6 +15,7 @@ import life.genny.qwandaq.models.GennyToken;
 import life.genny.qwandaq.utils.BaseEntityUtils;
 import life.genny.qwandaq.utils.CacheUtils;
 import life.genny.qwandaq.utils.DatabaseUtils;
+import life.genny.qwandaq.utils.DefUtils;
 import life.genny.qwandaq.utils.KafkaUtils;
 import life.genny.qwandaq.utils.KeycloakUtils;
 import life.genny.qwandaq.utils.QwandaUtils;
@@ -138,6 +139,13 @@ public class Service {
 	public void initAttributes() {
 		QwandaUtils.init(serviceToken);
 	}
+
+	/**
+	* Initialize BaseEntity Definitions.
+	 */
+	public void initDefinitions() {
+		DefUtils.init(beUtils);
+	}
 	
 	/**
 	* Perform a full initialization of the service.
@@ -148,5 +156,6 @@ public class Service {
 		initCache();
 		initKafka();
 		initAttributes();
+		initDefinitions();
 	}
 }
