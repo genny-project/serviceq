@@ -34,8 +34,15 @@ public class KafkaBean implements KafkaInterface {
 	 */
 	public void write(String channel, String payload) { 
 
-		JsonObject payloadObj = jsonb.fromJson(payload, JsonObject.class);
-		GennyToken userToken = new GennyToken(payloadObj.getString("token"));
+		JsonObject payloadObj = null;
+		GennyToken userToken = null;
+
+		try {
+			payloadObj = jsonb.fromJson(payload, JsonObject.class);
+			userToken = new GennyToken(payloadObj.getString("token"));
+		} catch (Exception e) {
+			log.debug("Message could not be deserialized to a JsonObject.");
+		}
 
 		if ("data".equals(channel)) {
 			producer.getToData().send(payload);
@@ -55,6 +62,9 @@ public class KafkaBean implements KafkaInterface {
 		} else if ("schedule".equals(channel)) {
 			producer.getToSchedule().send(payload);
 
+		} else if ("blacklist".equals(channel)) {
+			producer.getToBlacklist().send(payload);
+
 		} else if ("webcmds".equals(channel)) {
 
 			String bridgeId = BridgeSwitch.bridges.get(userToken.getUniqueId());
@@ -67,15 +77,13 @@ public class KafkaBean implements KafkaInterface {
 
 		} else if ("webdata".equals(channel)) {
 
-			producer.getToWebData().send(payload);
-
 			String bridgeId = BridgeSwitch.bridges.get(userToken.getUniqueId());
 
 			OutgoingKafkaRecordMetadata<String> metadata = OutgoingKafkaRecordMetadata.<String>builder()
 				.withTopic(bridgeId + "-" + channel)
 				.build();
 
-			producer.getToWebCmds().send(Message.of(payloadObj.toString()).addMetadata(metadata));
+			producer.getToWebData().send(Message.of(payloadObj.toString()).addMetadata(metadata));
 
 		} else {
 			log.error("Producer unable to write to channel " + channel);

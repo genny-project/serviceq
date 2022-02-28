@@ -53,4 +53,9 @@ public class InternalProducer {
     return schedule;
   }
 
+  @Inject @Channel("blacklistout") Emitter<String> blacklist;
+  public Emitter<String> getToBlacklist() {
+    return blacklist;
+  }
+
 }

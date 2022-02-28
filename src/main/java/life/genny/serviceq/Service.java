@@ -30,8 +30,11 @@ public class Service {
 
     static Jsonb jsonb = JsonbBuilder.create();
 
+	@ConfigProperty(name = "genny.show.values", defaultValue = "false")
+	Boolean showValues;
+
 	@ConfigProperty(name = "genny.keycloak.url", defaultValue = "https://keycloak.gada.io")
-	String baseKeycloakUrl;
+	String keycloakUrl;
 
 	@ConfigProperty(name = "genny.keycloak.realm", defaultValue = "genny")
 	String keycloakRealm;
@@ -105,7 +108,7 @@ public class Service {
 	 */
 	public void initToken() {
 		// fetch token and init entity utility
-		serviceToken = KeycloakUtils.getToken(baseKeycloakUrl, keycloakRealm, clientId, secret, serviceUsername, servicePassword);
+		serviceToken = KeycloakUtils.getToken(keycloakUrl, keycloakRealm, clientId, secret, serviceUsername, servicePassword);
 		beUtils = new BaseEntityUtils(serviceToken);
 	}
 
@@ -146,16 +149,45 @@ public class Service {
 	public void initDefinitions() {
 		DefUtils.init(beUtils);
 	}
+
+	/**
+	* log the service confiduration details.
+	 */
+	public void showConfiguration() {
+		
+		if (showValues) {
+			log.info("service username  : " + serviceUsername);
+			log.info("service password  : " + servicePassword);
+			log.info("keycloakUrl       : " + keycloakUrl);
+			log.info("keycloak clientId : " + clientId);
+			log.info("keycloak secret   : " + secret);
+			log.info("keycloak realm    : " + keycloakRealm);
+		}
+	}
 	
 	/**
 	* Perform a full initialization of the service.
 	 */
 	public void fullServiceInit() {
+
+		// log our service config
+		showConfiguration();
+
+		// init all
 		initToken();
 		initDatabase();
 		initCache();
 		initKafka();
 		initAttributes();
 		initDefinitions();
+	}
+
+	/**
+	* Boolean representing whether Service should print config values.
+	*
+	* @return should show values
+	 */
+	public Boolean showValues() {
+		return showValues;
 	}
 }
