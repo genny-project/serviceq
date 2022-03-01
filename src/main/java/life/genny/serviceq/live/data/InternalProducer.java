@@ -13,12 +13,12 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 @ApplicationScoped
 public class InternalProducer {
 
-  @Inject @Channel("data") Emitter<String> data;
+  @Inject @Channel("dataout") Emitter<String> data;
   public Emitter<String> getToData() {
     return data;
   }
 
-  @Inject @Channel("valid_data") Emitter<String> valid_data;
+  @Inject @Channel("valid_dataout") Emitter<String> valid_data;
   public Emitter<String> getToValidData() {
     return valid_data;
   }
