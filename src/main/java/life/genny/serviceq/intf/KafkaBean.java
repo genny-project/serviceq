@@ -69,22 +69,22 @@ public class KafkaBean implements KafkaInterface {
 
 			String bridgeId = BridgeSwitch.bridges.get(userToken.getUniqueId());
 
-			OutgoingKafkaRecordMetadata<String> metadata = OutgoingKafkaRecordMetadata.<String>builder()
-				.withTopic(bridgeId + "-" + channel)
-				.build();
+			// OutgoingKafkaRecordMetadata<String> metadata = OutgoingKafkaRecordMetadata.<String>builder()
+			// 	.withTopic(bridgeId + "-" + channel)
+			// 	.build();
 
-			producer.getToWebCmds().send(Message.of(payloadObj.toString()).addMetadata(metadata));
-
+			// producer.getToWebCmds().send(Message.of(payloadObj.toString()).addMetadata(metadata));
+			producer.getToWebCmds().send(payload);
 		} else if ("webdata".equals(channel)) {
 
-			String bridgeId = BridgeSwitch.bridges.get(userToken.getUniqueId());
+			// String bridgeId = BridgeSwitch.bridges.get(userToken.getUniqueId());
 
-			OutgoingKafkaRecordMetadata<String> metadata = OutgoingKafkaRecordMetadata.<String>builder()
-				.withTopic(bridgeId + "-" + channel)
-				.build();
+			// OutgoingKafkaRecordMetadata<String> metadata = OutgoingKafkaRecordMetadata.<String>builder()
+			// 	.withTopic(bridgeId + "-" + channel)
+			// 	.build();
 
-			producer.getToWebData().send(Message.of(payloadObj.toString()).addMetadata(metadata));
-
+			// producer.getToWebData().send(Message.of(payloadObj.toString()).addMetadata(metadata));
+			producer.getToWebData().send(payload);
 		} else {
 			log.error("Producer unable to write to channel " + channel);
 		}
