@@ -28,7 +28,7 @@ public class Service {
 
 	static final Logger log = Logger.getLogger(Service.class);
 
-    static Jsonb jsonb = JsonbBuilder.create();
+	static Jsonb jsonb = JsonbBuilder.create();
 
 	@ConfigProperty(name = "genny.show.values", defaultValue = "false")
 	Boolean showValues;

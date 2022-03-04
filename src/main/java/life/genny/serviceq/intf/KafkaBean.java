@@ -24,7 +24,7 @@ public class KafkaBean implements KafkaInterface {
 
 	static final Logger log = Logger.getLogger(KafkaBean.class);
 
-    static Jsonb jsonb = JsonbBuilder.create();
+	static Jsonb jsonb = JsonbBuilder.create();
 
 	/**
 	* Write a string payload to a kafka channel.
