@@ -67,7 +67,7 @@ public class KafkaBean implements KafkaInterface {
 
 		} else if ("webcmds".equals(channel)) {
 
-			String bridgeId = BridgeSwitch.bridges.get(userToken.getUniqueId());
+			// String bridgeId = BridgeSwitch.mappings.get(userToken.getUniqueId());
 
 			// OutgoingKafkaRecordMetadata<String> metadata = OutgoingKafkaRecordMetadata.<String>builder()
 			// 	.withTopic(bridgeId + "-" + channel)
