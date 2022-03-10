@@ -190,4 +190,13 @@ public class Service {
 	public Boolean showValues() {
 		return showValues;
 	}
+
+	/**
+	* Update the utils gennyToken
+	*
+	* @param gennyToken the gennyToken to update with
+	 */
+	public void updateGennyToken(GennyToken gennyToken) {
+		this.beUtils.updateGennyToken(gennyToken);
+	}
 }
