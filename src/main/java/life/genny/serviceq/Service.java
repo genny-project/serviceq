@@ -109,7 +109,7 @@ public class Service {
 	public void initToken() {
 		// fetch token and init entity utility
 		serviceToken = KeycloakUtils.getToken(keycloakUrl, keycloakRealm, clientId, secret, serviceUsername, servicePassword);
-		beUtils = new BaseEntityUtils(serviceToken);
+		beUtils = new BaseEntityUtils(serviceToken, serviceToken);
 	}
 
 	/**
