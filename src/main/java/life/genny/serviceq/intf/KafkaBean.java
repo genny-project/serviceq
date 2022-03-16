@@ -34,59 +34,67 @@ public class KafkaBean implements KafkaInterface {
 	 */
 	public void write(String channel, String payload) { 
 
+		if (channel == null) {
+			log.error("Channel must not be null!");
+			return;
+		}
+
+		if (payload == null) {
+			log.error("Payload must not be null!");
+			return;
+		}
+
+		// find GennyToken from payload contents
 		JsonObject payloadObj = null;
-		GennyToken userToken = null;
+		GennyToken gennyToken = null;
 
 		try {
 			payloadObj = jsonb.fromJson(payload, JsonObject.class);
-			userToken = new GennyToken(payloadObj.getString("token"));
+			gennyToken = new GennyToken(payloadObj.getString("token"));
 		} catch (Exception e) {
 			log.debug("Message could not be deserialized to a JsonObject.");
 		}
 
-		if ("data".equals(channel)) {
-			producer.getToData().send(payload);
+		// create metadata for correct bridge if outgoing
+		OutgoingKafkaRecordMetadata<String> metadata = null;
 
-		} else if ("valid_data".equals(channel)) {
-			producer.getToValidData().send(payload);
+		// if ("webcmds".equals(channel) || "webdata".equals(channel)) {
 
-		} else if ("search_events".equals(channel)) {
-			producer.getToSearchEvents().send(payload);
+		// 	String bridgeId = BridgeSwitch.get(gennyToken);
 
-		} else if ("search_Data".equals(channel)) {
-			producer.getToSearchData().send(payload);
+		// 	if (bridgeId == null) {
+		// 		log.error("No Bridge ID found for " + gennyToken.getUserCode() + " : " + gennyToken.getUniqueId());
+		// 	}
 
-		} else if ("messages".equals(channel)) {
-			producer.getToMessages().send(payload);
+		// 	metadata = OutgoingKafkaRecordMetadata.<String>builder()
+		// 		.withTopic(bridgeId + "-" + channel)
+		// 		.build();
+		// }
 
-		} else if ("schedule".equals(channel)) {
-			producer.getToSchedule().send(payload);
-
-		} else if ("blacklist".equals(channel)) {
-			producer.getToBlacklist().send(payload);
-
-		} else if ("webcmds".equals(channel)) {
-
-			// String bridgeId = BridgeSwitch.mappings.get(userToken.getUniqueId());
-
-			// OutgoingKafkaRecordMetadata<String> metadata = OutgoingKafkaRecordMetadata.<String>builder()
-			// 	.withTopic(bridgeId + "-" + channel)
-			// 	.build();
-
-			// producer.getToWebCmds().send(Message.of(payloadObj.toString()).addMetadata(metadata));
-			producer.getToWebCmds().send(payload);
-		} else if ("webdata".equals(channel)) {
-
-			// String bridgeId = BridgeSwitch.bridges.get(userToken.getUniqueId());
-
-			// OutgoingKafkaRecordMetadata<String> metadata = OutgoingKafkaRecordMetadata.<String>builder()
-			// 	.withTopic(bridgeId + "-" + channel)
-			// 	.build();
-
-			// producer.getToWebData().send(Message.of(payloadObj.toString()).addMetadata(metadata));
-			producer.getToWebData().send(payload);
-		} else {
-			log.error("Producer unable to write to channel " + channel);
+		// channel switch
+		switch (channel) {
+			case "data":
+				producer.getToData().send(payload);
+			case "valid_data":
+				producer.getToValidData().send(payload);
+			case "search_events":
+				producer.getToSearchEvents().send(payload);
+			case "search_data":
+				producer.getToSearchData().send(payload);
+			case "messages":
+				producer.getToMessages().send(payload);
+			case "schedule":
+				producer.getToSchedule().send(payload);
+			case "blacklist":
+				producer.getToBlacklist().send(payload);
+			case "webcmds":
+				// producer.getToWebCmds().send(Message.of(payloadObj.toString()).addMetadata(metadata));
+				producer.getToWebCmds().send(payload);
+			case "webdata":
+				// producer.getToWebData().send(Message.of(payloadObj.toString()).addMetadata(metadata));
+				producer.getToWebData().send(payload);
+			default:
+				log.error("Producer unable to write to channel " + channel);
 		}
 	}
 }
