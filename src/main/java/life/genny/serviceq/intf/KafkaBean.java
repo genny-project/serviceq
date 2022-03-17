@@ -58,18 +58,21 @@ public class KafkaBean implements KafkaInterface {
 		// create metadata for correct bridge if outgoing
 		OutgoingKafkaRecordMetadata<String> metadata = null;
 
-		// if ("webcmds".equals(channel) || "webdata".equals(channel)) {
+		if ("webcmds".equals(channel) || "webdata".equals(channel)) {
 
-		// 	String bridgeId = BridgeSwitch.get(gennyToken);
+			String bridgeId = BridgeSwitch.get(gennyToken);
 
-		// 	if (bridgeId == null) {
-		// 		log.error("No Bridge ID found for " + gennyToken.getUserCode() + " : " + gennyToken.getUniqueId());
-		// 	}
+			if (bridgeId == null) {
+				log.warn("No Bridge ID found for " + gennyToken.getUserCode() + " : " + gennyToken.getUniqueId());
 
-		// 	metadata = OutgoingKafkaRecordMetadata.<String>builder()
-		// 		.withTopic(bridgeId + "-" + channel)
-		// 		.build();
-		// }
+				bridgeId = BridgeSwitch.activeBridgeIds.iterator().next();
+				log.warn("Sending to " + bridgeId + " instead!");
+			}
+
+			metadata = OutgoingKafkaRecordMetadata.<String>builder()
+				.withTopic(bridgeId + "-" + channel)
+				.build();
+		}
 
 		// channel switch
 		switch (channel) {
@@ -88,11 +91,11 @@ public class KafkaBean implements KafkaInterface {
 			case "blacklist":
 				producer.getToBlacklist().send(payload);
 			case "webcmds":
-				// producer.getToWebCmds().send(Message.of(payloadObj.toString()).addMetadata(metadata));
-				producer.getToWebCmds().send(payload);
+				producer.getToWebCmds().send(Message.of(payloadObj.toString()).addMetadata(metadata));
+				// producer.getToWebCmds().send(payload);
 			case "webdata":
-				// producer.getToWebData().send(Message.of(payloadObj.toString()).addMetadata(metadata));
-				producer.getToWebData().send(payload);
+				producer.getToWebData().send(Message.of(payloadObj.toString()).addMetadata(metadata));
+				// producer.getToWebData().send(payload);
 			default:
 				log.error("Producer unable to write to channel " + channel);
 		}
