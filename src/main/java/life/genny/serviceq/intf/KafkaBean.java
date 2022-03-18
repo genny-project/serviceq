@@ -91,11 +91,11 @@ public class KafkaBean implements KafkaInterface {
 			case "blacklist":
 				producer.getToBlacklist().send(payload);
 			case "webcmds":
-				producer.getToWebCmds().send(Message.of(payloadObj.toString()).addMetadata(metadata));
-				// producer.getToWebCmds().send(payload);
+				// producer.getToWebCmds().send(Message.of(payloadObj.toString()).addMetadata(metadata));
+				producer.getToWebCmds().send(payload);
 			case "webdata":
-				producer.getToWebData().send(Message.of(payloadObj.toString()).addMetadata(metadata));
-				// producer.getToWebData().send(payload);
+				// producer.getToWebData().send(Message.of(payloadObj.toString()).addMetadata(metadata));
+				producer.getToWebData().send(payload);
 			default:
 				log.error("Producer unable to write to channel " + channel);
 		}
