@@ -65,13 +65,16 @@ public class KafkaBean implements KafkaInterface {
 			if (bridgeId == null) {
 				log.warn("No Bridge ID found for " + gennyToken.getUserCode() + " : " + gennyToken.getJTI());
 
-				bridgeId = BridgeSwitch.activeBridgeIds.iterator().next();
-				log.warn("Sending to " + bridgeId + " instead!");
+				// bridgeId = BridgeSwitch.activeBridgeIds.iterator().next();
+				// log.warn("Sending to " + bridgeId + " instead!");
 			}
 
-			metadata = OutgoingKafkaRecordMetadata.<String>builder()
-				.withTopic(bridgeId + "-" + channel)
-				.build();
+			// NOTE: temporary
+			if (bridgeId == null) {
+				metadata = OutgoingKafkaRecordMetadata.<String>builder()
+					.withTopic(bridgeId + "-" + channel)
+					.build();
+			}
 		}
 
 		// channel switch
