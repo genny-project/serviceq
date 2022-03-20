@@ -63,7 +63,7 @@ public class KafkaBean implements KafkaInterface {
 			String bridgeId = BridgeSwitch.get(gennyToken);
 
 			if (bridgeId == null) {
-				log.warn("No Bridge ID found for " + gennyToken.getUserCode() + " : " + gennyToken.getUniqueId());
+				log.warn("No Bridge ID found for " + gennyToken.getUserCode() + " : " + gennyToken.getJTI());
 
 				bridgeId = BridgeSwitch.activeBridgeIds.iterator().next();
 				log.warn("Sending to " + bridgeId + " instead!");
