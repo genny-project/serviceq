@@ -79,28 +79,41 @@ public class KafkaBean implements KafkaInterface {
 
 		// channel switch
 		switch (channel) {
+			case "events":
+				producer.getToEvents().send(payload);
+				break;
 			case "data":
 				producer.getToData().send(payload);
+				break;
 			case "valid_data":
 				producer.getToValidData().send(payload);
+				break;
 			case "search_events":
 				producer.getToSearchEvents().send(payload);
+				break;
 			case "search_data":
 				producer.getToSearchData().send(payload);
+				break;
 			case "messages":
 				producer.getToMessages().send(payload);
+				break;
 			case "schedule":
 				producer.getToSchedule().send(payload);
+				break;
 			case "blacklist":
 				producer.getToBlacklist().send(payload);
+				break;
 			case "webcmds":
 				// producer.getToWebCmds().send(Message.of(payloadObj.toString()).addMetadata(metadata));
 				producer.getToWebCmds().send(payload);
+				break;
 			case "webdata":
 				// producer.getToWebData().send(Message.of(payloadObj.toString()).addMetadata(metadata));
 				producer.getToWebData().send(payload);
+				break;
 			default:
 				log.error("Producer unable to write to channel " + channel);
+				break;
 		}
 	}
 }
