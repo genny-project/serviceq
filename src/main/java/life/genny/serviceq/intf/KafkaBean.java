@@ -58,43 +58,62 @@ public class KafkaBean implements KafkaInterface {
 		// create metadata for correct bridge if outgoing
 		OutgoingKafkaRecordMetadata<String> metadata = null;
 
-		// if ("webcmds".equals(channel) || "webdata".equals(channel)) {
+		if ("webcmds".equals(channel) || "webdata".equals(channel)) {
 
-		// 	String bridgeId = BridgeSwitch.get(gennyToken);
+			String bridgeId = BridgeSwitch.get(gennyToken);
 
-		// 	if (bridgeId == null) {
-		// 		log.error("No Bridge ID found for " + gennyToken.getUserCode() + " : " + gennyToken.getUniqueId());
-		// 	}
+			if (bridgeId == null) {
+				log.warn("No Bridge ID found for " + gennyToken.getUserCode() + " : " + gennyToken.getJTI());
 
-		// 	metadata = OutgoingKafkaRecordMetadata.<String>builder()
-		// 		.withTopic(bridgeId + "-" + channel)
-		// 		.build();
-		// }
+				// bridgeId = BridgeSwitch.activeBridgeIds.iterator().next();
+				// log.warn("Sending to " + bridgeId + " instead!");
+			}
+
+			// NOTE: temporary
+			if (bridgeId == null) {
+				metadata = OutgoingKafkaRecordMetadata.<String>builder()
+					.withTopic(bridgeId + "-" + channel)
+					.build();
+			}
+		}
 
 		// channel switch
 		switch (channel) {
+			case "events":
+				producer.getToEvents().send(payload);
+				break;
 			case "data":
 				producer.getToData().send(payload);
+				break;
 			case "valid_data":
 				producer.getToValidData().send(payload);
+				break;
 			case "search_events":
 				producer.getToSearchEvents().send(payload);
+				break;
 			case "search_data":
 				producer.getToSearchData().send(payload);
+				break;
 			case "messages":
 				producer.getToMessages().send(payload);
+				break;
 			case "schedule":
 				producer.getToSchedule().send(payload);
+				break;
 			case "blacklist":
 				producer.getToBlacklist().send(payload);
+				break;
 			case "webcmds":
 				// producer.getToWebCmds().send(Message.of(payloadObj.toString()).addMetadata(metadata));
 				producer.getToWebCmds().send(payload);
+				break;
 			case "webdata":
 				// producer.getToWebData().send(Message.of(payloadObj.toString()).addMetadata(metadata));
 				producer.getToWebData().send(payload);
+				break;
 			default:
 				log.error("Producer unable to write to channel " + channel);
+				break;
 		}
 	}
 }

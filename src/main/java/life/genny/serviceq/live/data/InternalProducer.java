@@ -13,6 +13,11 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 @ApplicationScoped
 public class InternalProducer {
 
+  @Inject @Channel("eventsout") Emitter<String> events;
+  public Emitter<String> getToEvents() {
+    return events;
+  }
+
   @Inject @Channel("dataout") Emitter<String> data;
   public Emitter<String> getToData() {
     return data;
