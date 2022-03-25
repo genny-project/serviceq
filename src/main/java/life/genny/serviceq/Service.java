@@ -1,5 +1,6 @@
 package life.genny.serviceq;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
@@ -168,6 +169,7 @@ public class Service {
 	/**
 	* Perform a full initialization of the service.
 	 */
+	@PostConstruct
 	public void fullServiceInit() {
 
 		// log our service config
