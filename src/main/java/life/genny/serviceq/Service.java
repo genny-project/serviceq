@@ -68,6 +68,8 @@ public class Service {
 
 	BaseEntityUtils beUtils;
 
+	private Boolean initialised = false;
+
 	/**
 	* Get the BaseEntityUtils instance.
 	*
@@ -171,7 +173,10 @@ public class Service {
 	 */
 	@PostConstruct
 	public void fullServiceInit() {
-
+		if(initialised) {
+			log.info("Attempted initialisation again. Are you calling this method in the code?");
+			return;
+		}
 		// log our service config
 		showConfiguration();
 
@@ -182,6 +187,8 @@ public class Service {
 		initKafka();
 		initAttributes();
 		initDefinitions();
+
+		initialised = true;
 	}
 
 	/**
