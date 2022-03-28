@@ -112,6 +112,10 @@ public class Service {
 	public void initToken() {
 		// fetch token and init entity utility
 		serviceToken = KeycloakUtils.getToken(keycloakUrl, keycloakRealm, clientId, secret, serviceUsername, servicePassword);
+		if(serviceToken == null) {
+			log.error("Service token is null for realm!: " + keycloakRealm);
+		}
+		log.info("ServiceToken: " + (serviceToken != null ? serviceToken.getToken() : " null"));
 		beUtils = new BaseEntityUtils(serviceToken, serviceToken);
 	}
 
