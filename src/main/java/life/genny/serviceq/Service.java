@@ -178,7 +178,7 @@ public class Service {
 	@PostConstruct
 	public void fullServiceInit() {
 		if(initialised) {
-			log.info("Attempted initialisation again. Are you calling this method in the code?");
+			log.warn("Attempted initialisation again. Are you calling this method in more than one place?");
 			return;
 		}
 		// log our service config
