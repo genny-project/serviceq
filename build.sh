@@ -1,2 +1,2 @@
 #!/bin/bash
-./mvnw clean install -DskipTests=false -Dstyle.color=always
+./mvnw clean install -DskipTests=false -U -Dstyle.color=always
