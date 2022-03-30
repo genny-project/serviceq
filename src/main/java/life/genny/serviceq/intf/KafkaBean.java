@@ -64,16 +64,17 @@ public class KafkaBean implements KafkaInterface {
 
 			if (bridgeId == null) {
 				log.warn("No Bridge ID found for " + gennyToken.getUserCode() + " : " + gennyToken.getJTI());
-
-				// bridgeId = BridgeSwitch.activeBridgeIds.iterator().next();
-				// log.warn("Sending to " + bridgeId + " instead!");
+				bridgeId = BridgeSwitch.findActiveBridgeId(gennyToken);
 			}
 
-			// NOTE: temporary
-			if (bridgeId == null) {
+			if (bridgeId != null) {
+				log.info("Sending to " + bridgeId);
+
 				metadata = OutgoingKafkaRecordMetadata.<String>builder()
 					.withTopic(bridgeId + "-" + channel)
 					.build();
+			} else {
+				log.error("No alternative Bridge ID found!");
 			}
 		}
 
@@ -104,12 +105,12 @@ public class KafkaBean implements KafkaInterface {
 				producer.getToBlacklist().send(payload);
 				break;
 			case "webcmds":
-				// producer.getToWebCmds().send(Message.of(payloadObj.toString()).addMetadata(metadata));
-				producer.getToWebCmds().send(payload);
+				producer.getToWebCmds().send(Message.of(payload).addMetadata(metadata));
+				// producer.getToWebCmds().send(payload);
 				break;
 			case "webdata":
-				// producer.getToWebData().send(Message.of(payloadObj.toString()).addMetadata(metadata));
-				producer.getToWebData().send(payload);
+				producer.getToWebData().send(Message.of(payload).addMetadata(metadata));
+				// producer.getToWebData().send(payload);
 				break;
 			default:
 				log.error("Producer unable to write to channel " + channel);
