@@ -185,7 +185,7 @@ public class Service {
 	/**
 	 * Perform a full initialization of the service.
 	 */
-	@PostConstruct
+	
 	public void fullServiceInit() {
 		if (initialised) {
 			log.warn("Attempted initialisation again. Are you calling this method in more than one place?");
