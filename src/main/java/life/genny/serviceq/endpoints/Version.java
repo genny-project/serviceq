@@ -10,11 +10,10 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import io.vertx.core.json.JsonObject;
 
 /**
- * DummyVersion --- An endpoint normally used by public facing clients
- * such as alyson to retrieve information about this project. 
+ * Version --- An endpoint dedicated to the service version 
+ * query used in healthchecks.
  *
- * @author    hello@gada.io
- *
+ * @author    jasper.robison@gada.io
  */
 @Path("/api/version")
 public class Version {
@@ -23,11 +22,9 @@ public class Version {
 	String version;
 	
     /**
-     * The endpoint returns information specific to this project 
-     * information such as commit hash, last user who commit and 
-     * version number of this project are included
+     * An endpoint to return the service version details.
      *
-     * @return GitApplicationProperties 
+     * @return JsonObject
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)

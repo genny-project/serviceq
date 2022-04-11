@@ -64,10 +64,6 @@ public class Service {
 	@Inject
 	KafkaBean kafkaBean;
 
-	GennyToken serviceToken;
-
-	BaseEntityUtils beUtils;
-
 	@Inject
 	DatabaseUtils databaseUtils;
 
@@ -76,6 +72,10 @@ public class Service {
 
 	@Inject
 	QwandaUtils qwandaUtils;
+
+	GennyToken serviceToken;
+
+	BaseEntityUtils beUtils;
 
 	private Boolean initialised = false;
 
@@ -119,13 +119,15 @@ public class Service {
 	 * Initialize the serviceToken and BE Utility.
 	 */
 	public void initToken() {
+
 		// fetch token and init entity utility
-		serviceToken = KeycloakUtils.getToken(keycloakUrl, keycloakRealm, clientId, secret, serviceUsername,
-				servicePassword);
+		serviceToken = KeycloakUtils.getToken(keycloakUrl, keycloakRealm, clientId, secret, serviceUsername, servicePassword);
+
 		if (serviceToken == null) {
 			log.error("Service token is null for realm!: " + keycloakRealm);
 		}
 		log.info("ServiceToken: " + (serviceToken != null ? serviceToken.getToken() : " null"));
+
 		beUtils = new BaseEntityUtils(serviceToken, serviceToken);
 	}
 
@@ -187,10 +189,12 @@ public class Service {
 	 */
 	
 	public void fullServiceInit() {
+
 		if (initialised) {
 			log.warn("Attempted initialisation again. Are you calling this method in more than one place?");
 			return;
 		}
+
 		// log our service config
 		showConfiguration();
 
