@@ -1,5 +1,6 @@
 package life.genny.serviceq;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
@@ -57,7 +58,7 @@ public class Service {
 	@Inject
 	InternalProducer producer;
 
-	@Inject 
+	@Inject
 	GennyCache cache;
 
 	@Inject
@@ -67,94 +68,110 @@ public class Service {
 
 	BaseEntityUtils beUtils;
 
+	@Inject
+	DatabaseUtils databaseUtils;
+
+	@Inject
+	DefUtils defUtils;
+
+	@Inject
+	QwandaUtils qwandaUtils;
+
+	private Boolean initialised = false;
+
 	/**
-	* Get the BaseEntityUtils instance.
-	*
-	* @return The BaseEntityUtils object
+	 * Get the BaseEntityUtils instance.
+	 *
+	 * @return The BaseEntityUtils object
 	 */
 	public BaseEntityUtils getBeUtils() {
 		return beUtils;
 	}
 
 	/**
-	* Set the BaseEntityUtils instance.
-	*
-	* @param beUtils The BaseEntityUtils object
+	 * Set the BaseEntityUtils instance.
+	 *
+	 * @param beUtils The BaseEntityUtils object
 	 */
 	public void setBeUtils(BaseEntityUtils beUtils) {
 		this.beUtils = beUtils;
 	}
 
 	/**
-	* Get the serviceToken.
-	*
-	* @return The serviceToken
+	 * Get the serviceToken.
+	 *
+	 * @return The serviceToken
 	 */
 	public GennyToken getServiceToken() {
 		return serviceToken;
 	}
 
 	/**
-	* Set the serviceToken.
-	*
-	* @param serviceToken The serviceToken
+	 * Set the serviceToken.
+	 *
+	 * @param serviceToken The serviceToken
 	 */
 	public void setServiceToken(GennyToken serviceToken) {
 		this.serviceToken = serviceToken;
 	}
 
 	/**
-	* Initialize the serviceToken and BE Utility.
+	 * Initialize the serviceToken and BE Utility.
 	 */
 	public void initToken() {
 		// fetch token and init entity utility
-		serviceToken = KeycloakUtils.getToken(keycloakUrl, keycloakRealm, clientId, secret, serviceUsername, servicePassword);
+		serviceToken = KeycloakUtils.getToken(keycloakUrl, keycloakRealm, clientId, secret, serviceUsername,
+				servicePassword);
+		if (serviceToken == null) {
+			log.error("Service token is null for realm!: " + keycloakRealm);
+		}
+		log.info("ServiceToken: " + (serviceToken != null ? serviceToken.getToken() : " null"));
 		beUtils = new BaseEntityUtils(serviceToken, serviceToken);
 	}
 
 	/**
-	* Initialize the database connection
+	 * Initialize the database connection
 	 */
 	public void initDatabase() {
-		DatabaseUtils.init(entityManager);
+		databaseUtils.init(entityManager);
 	}
 
 	/**
-	* Initialize the cache connection
+	 * Initialize the cache connection
 	 */
 	public void initCache() {
 		CacheUtils.init(cache);
 	}
 
 	/**
-	* Initialize the Kafka channels.
-	*
-	* NOTE: This is probably redundant. 
-	* We could move the KafkaBean code into KafkaUtils.
+	 * Initialize the Kafka channels.
+	 *
+	 * NOTE: This is probably redundant.
+	 * We could move the KafkaBean code into KafkaUtils.
 	 */
 	public void initKafka() {
 		KafkaUtils.init(kafkaBean);
 	}
 
 	/**
-	* Initialize the Attribute cache.
+	 * Initialize the Attribute cache.
 	 */
 	public void initAttributes() {
-		QwandaUtils.init(serviceToken);
+		qwandaUtils.init(serviceToken);
 	}
 
 	/**
-	* Initialize BaseEntity Definitions.
+	 * Initialize BaseEntity Definitions.
 	 */
 	public void initDefinitions() {
-		DefUtils.init(beUtils);
+		defUtils.init(beUtils);
 	}
 
 	/**
-	* log the service confiduration details.
+	 * log the service confiduration details.
 	 */
 	public void showConfiguration() {
-		
+
 		if (showValues) {
 			log.info("service username  : " + serviceUsername);
 			log.info("service password  : " + servicePassword);
@@ -164,12 +181,16 @@ public class Service {
 			log.info("keycloak realm    : " + keycloakRealm);
 		}
 	}
-	
-	/**
-	* Perform a full initialization of the service.
-	 */
-	public void fullServiceInit() {
 
+	/**
+	 * Perform a full initialization of the service.
+	 */
+	
+	public void fullServiceInit() {
+		if (initialised) {
+			log.warn("Attempted initialisation again. Are you calling this method in more than one place?");
+			return;
+		}
 		// log our service config
 		showConfiguration();
 
@@ -180,21 +201,23 @@ public class Service {
 		initKafka();
 		initAttributes();
 		initDefinitions();
+
+		initialised = true;
 	}
 
 	/**
-	* Boolean representing whether Service should print config values.
-	*
-	* @return should show values
+	 * Boolean representing whether Service should print config values.
+	 *
+	 * @return should show values
 	 */
 	public Boolean showValues() {
 		return showValues;
 	}
 
 	/**
-	* Update the utils gennyToken
-	*
-	* @param gennyToken the gennyToken to update with
+	 * Update the utils gennyToken
+	 *
+	 * @param gennyToken the gennyToken to update with
 	 */
 	public void updateGennyToken(GennyToken gennyToken) {
 		this.beUtils.updateGennyToken(gennyToken);
