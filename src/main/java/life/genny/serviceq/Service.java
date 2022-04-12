@@ -80,6 +80,14 @@ public class Service {
 	private Boolean initialised = false;
 
 	/**
+	 * Get the {@link QwandaUtils} instance
+	 * @return the QwandaUtils instance
+	 */
+	public QwandaUtils getQwandaUtils() {
+		return qwandaUtils;
+	}
+
+	/**
 	 * Get the BaseEntityUtils instance.
 	 *
 	 * @return The BaseEntityUtils object
