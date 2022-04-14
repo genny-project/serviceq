@@ -49,7 +49,7 @@ public class Service {
 	@ConfigProperty(name = "genny.oidc.client-id", defaultValue = "backend")
 	String clientId;
 
-	@ConfigProperty(name = "genny.oidc.credentials.secret", defaultValue = "secret")
+	@ConfigProperty(name = "genny.oidc.credentials.secret", defaultValue = "")
 	String secret;
 
 	@Inject
